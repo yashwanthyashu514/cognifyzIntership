@@ -22,6 +22,29 @@ const connectDB = async () => {
     });
     cachedConnection = conn;
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+
+    // Auto-heal misspelled or capitalized statuses in the database
+    try {
+      const db = conn.connection.db;
+      const tasksCollection = db.collection('tasks');
+
+      const inProgressUpdate = await tasksCollection.updateMany(
+        { status: { $in: ['In Progrees', 'In Progress', 'inprogress', 'In progress'] } },
+        { $set: { status: 'in-progress' } }
+      );
+
+      const completedUpdate = await tasksCollection.updateMany(
+        { status: { $in: ['Complete', 'complete', 'Completed'] } },
+        { $set: { status: 'completed' } }
+      );
+
+      if (inProgressUpdate.modifiedCount > 0 || completedUpdate.modifiedCount > 0) {
+        console.log(`✨ Auto-corrected misspelled task statuses in DB: ${inProgressUpdate.modifiedCount} in-progress, ${completedUpdate.modifiedCount} completed.`);
+      }
+    } catch (migError) {
+      console.warn('⚠️ Database auto-heal warning:', migError.message);
+    }
+
     return conn;
   } catch (error) {
     console.error(`❌ MongoDB Connection Error: ${error.message}`);
