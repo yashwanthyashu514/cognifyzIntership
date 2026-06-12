@@ -4,7 +4,7 @@ import Task from '../models/Task.js';
 // @access  Private
 export const createTask = async (req, res) => {
   try {
-    const { title, description, priority, dueDate, category, tags } = req.body;
+    const { title, description, status, priority, dueDate, category, tags } = req.body;
 
     // Validation
     if (!title) {
@@ -25,10 +25,12 @@ export const createTask = async (req, res) => {
       userId: req.user.id,
       title,
       description: description || '',
+      status: status || 'todo',
       priority: priority || 'medium',
       dueDate: dueDate || null,
       category: category || 'general',
       tags: tags || [],
+      completedAt: status === 'completed' ? new Date() : null,
     });
 
     await task.save();
