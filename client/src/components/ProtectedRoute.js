@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }) => {
         height: '100vh',
         background: 'var(--bg-secondary)'
       }}>
-        <div className="spinner"></div>
+        <div className="loader"></div>
       </div>
     );
   }

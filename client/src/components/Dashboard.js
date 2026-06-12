@@ -330,7 +330,7 @@ const Dashboard = () => {
       {/* Tasks Section */}
       {loading && tasks.length === 0 ? (
         <div className="loader-container">
-          <div className="spinner"></div>
+          <div className="loader"></div>
           <p>Loading tasks...</p>
         </div>
       ) : tasks.length === 0 ? (
