@@ -1,0 +1,15 @@
+{
+  "name": "task2-validation-storage",
+  "version": "1.0.0",
+  "description": "Task 2: Inline Styles, Validation, and Server-Side Storage",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ejs": "^3.1.9",
+    "express-validator": "^7.0.1"
+  }
+}

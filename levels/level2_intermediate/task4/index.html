@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cognifyz SPA - Dynamic DOM & Routing (Task 4)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --bg: #090d16;
+      --panel: #111827;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar styling */
+    header {
+      background: rgba(17, 24, 39, 0.95);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-icon {
+      background: var(--primary);
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: white;
+    }
+
+    /* Page Container */
+    main {
+      flex: 1;
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* Views */
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+      animation: pageFadeIn 0.3s ease;
+    }
+
+    @keyframes pageFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards and Panels */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #d1d5db;
+    }
+
+    input {
+      width: 100%;
+      background: rgba(9, 13, 22, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: white;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Password strength details */
+    .strength-bar-wrapper {
+      height: 6px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 3px;
+      margin-top: 0.75rem;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .strength-chunk {
+      flex: 1;
+      height: 100%;
+      margin-right: 2px;
+      background: transparent;
+      transition: background 0.3s;
+    }
+
+    .strength-chunk:last-child {
+      margin-right: 0;
+    }
+
+    .strength-criteria {
+      margin-top: 0.75rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .criterion {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s;
+    }
+
+    .criterion.valid {
+      color: var(--success);
+    }
+
+    .criterion::before {
+      content: '○';
+    }
+
+    .criterion.valid::before {
+      content: '●';
+    }
+
+    .strength-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .strength-weak { color: var(--danger); }
+    .strength-medium { color: var(--warning); }
+    .strength-strong { color: var(--success); }
+
+    /* Buttons */
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Dynamic User List Table */
+    .user-table-wrapper {
+      margin-top: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-action {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action.edit:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-action.delete:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    /* Dynamic Toast Notification */
+    .toast-notification {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #1f2937;
+      border-left: 4px solid var(--primary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .toast-notification.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- App Header -->
+  <header>
+    <div class="nav-container">
+      <a href="#home" class="brand">
+        <div class="brand-icon"></div>
+        Cognifyz SPA
+      </a>
+      <nav class="nav-links">
+        <a href="#home" id="nav-home">Home</a>
+        <a href="#register" id="nav-register">Register</a>
+        <a href="#users" id="nav-users">User Directory</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main View Area -->
+  <main>
+    
+    <!-- Home View -->
+    <div id="view-home" class="view panel">
+      <h2 style="font-size: 2rem; margin-bottom: 1rem;">Single Page Application</h2>
+      <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem;">
+        Welcome to Level 2 - Task 4 client-side SPA. This application features hash-based client-side routing, meaning swapping views does not reload the page.
+      </p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;">
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 1.5rem; border-radius: 0.5rem;">
+          <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Password Strength Rule engine</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Interactive form validation checking length, numbers, casings, and symbols live.</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 1.5rem; border-radius: 0.5rem;">
+          <h4 style="color: var(--success); margin-bottom: 0.5rem;">Interactive DOM Syncing</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Dynamic lists rendered and mutated on client side. No server databases needed.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Register View -->
+    <div id="view-register" class="view panel">
+      <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Account Registration</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Please fill out the form details below. Form fields validate live.</p>
+
+      <form id="spaForm" style="max-width: 500px;">
+        <div class="form-group">
+          <label for="fullname">Full Name *</label>
+          <input type="text" id="fullname" placeholder="e.g. John Doe" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" placeholder="e.g. john@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password *</label>
+          <input type="password" id="password" placeholder="Min. 8 characters" required>
+          
+          <!-- Password strength display -->
+          <div class="strength-bar-wrapper">
+            <div id="chunk-1" class="strength-chunk"></div>
+            <div id="chunk-2" class="strength-chunk"></div>
+            <div id="chunk-3" class="strength-chunk"></div>
+            <div id="chunk-4" class="strength-chunk"></div>
+            <div id="chunk-5" class="strength-chunk"></div>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Strength:</span>
+            <span id="strengthText" class="strength-label strength-weak">Empty</span>
+          </div>
+
+          <!-- Sub-rules validation checkmarks -->
+          <div class="strength-criteria">
+            <div id="rule-length" class="criterion">At least 8 characters</div>
+            <div id="rule-upper" class="criterion">Contains uppercase letter</div>
+            <div id="rule-lower" class="criterion">Contains lowercase letter</div>
+            <div id="rule-number" class="criterion">Contains digit / number</div>
+            <div id="rule-symbol" class="criterion">Contains special character</div>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn" style="margin-top: 1rem;" disabled>Create Local Profile</button>
+      </form>
+    </div>
+
+    <!-- Users View (DOM Management) -->
+    <div id="view-users" class="view panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.75rem;">Registered Users</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Interactive client-side user directory</p>
+        </div>
+        <button class="btn" onclick="location.hash='#register'">+ Add User</button>
+      </div>
+
+      <div class="user-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Password (strength)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody">
+            <!-- Appended dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Toast Element -->
+  <div id="toast" class="toast-notification">Notification text</div>
+
+  <script>
+    // 1. Simple Client-Side Router
+    const views = {
+      home: document.getElementById('view-home'),
+      register: document.getElementById('view-register'),
+      users: document.getElementById('view-users')
+    };
+
+    const navLinks = {
+      home: document.getElementById('nav-home'),
+      register: document.getElementById('nav-register'),
+      users: document.getElementById('nav-users')
+    };
+
+    function router() {
+      // Get current hash, default to 'home'
+      const hash = location.hash.replace('#', '') || 'home';
+      
+      // Deactivate all views and navigation links
+      Object.keys(views).forEach(key => {
+        if (views[key]) views[key].classList.remove('active');
+        if (navLinks[key]) navLinks[key].classList.remove('active');
+      });
+
+      // Activate active route
+      if (views[hash]) {
+        views[hash].classList.add('active');
+      } else {
+        views.home.classList.add('active'); // fallback
+      }
+      
+      if (navLinks[hash]) {
+        navLinks[hash].classList.add('active');
+      } else if (navLinks.home) {
+        navLinks.home.classList.add('active');
+      }
+    }
+
+    window.addEventListener('hashchange', router);
+    window.addEventListener('DOMContentLoaded', () => {
+      router();
+      renderUsers(); // initial render
+    });
+
+    // 2. User Mock Database
+    const users = [
+      { id: 1, name: 'Yashwanth M', email: 'yash@cognifyz.com', strength: 'Strong' },
+      { id: 2, name: 'John Doe', email: 'john@example.com', strength: 'Medium' }
+    ];
+
+    // 3. Complex Password Validation Rule Engine
+    const passwordInput = document.getElementById('password');
+    const submitBtn = document.getElementById('submitBtn');
+    const strengthText = document.getElementById('strengthText');
+    
+    const rules = {
+      length: document.getElementById('rule-length'),
+      upper: document.getElementById('rule-upper'),
+      lower: document.getElementById('rule-lower'),
+      number: document.getElementById('rule-number'),
+      symbol: document.getElementById('rule-symbol')
+    };
+
+    const chunks = [
+      document.getElementById('chunk-1'),
+      document.getElementById('chunk-2'),
+      document.getElementById('chunk-3'),
+      document.getElementById('chunk-4'),
+      document.getElementById('chunk-5')
+    ];
+
+    let passwordIsValid = false;
+
+    passwordInput.addEventListener('input', () => {
+      const val = passwordInput.value;
+      
+      // Evaluate sub-rules
+      const checks = {
+        length: val.length >= 8,
+        upper: /[A-Z]/.test(val),
+        lower: /[a-z]/.test(val),
+        number: /[0-9]/.test(val),
+        symbol: /[^a-zA-Z0-9]/.test(val)
+      };
+
+      let score = 0;
+      
+      // Update checkbox check states dynamically
+      Object.keys(checks).forEach(key => {
+        if (checks[key]) {
+          rules[key].classList.add('valid');
+          score++;
+        } else {
+          rules[key].classList.remove('valid');
+        }
+      });
+
+      // Update strength bar color chunks
+      chunks.forEach((chunk, index) => {
+        chunk.style.background = 'transparent';
+      });
+
+      let barColor = 'transparent';
+      let strengthWord = 'Empty';
+
+      if (val.length > 0) {
+        if (score <= 2) {
+          barColor = 'var(--danger)';
+          strengthWord = 'Weak';
+          strengthText.className = 'strength-label strength-weak';
+        } else if (score <= 4) {
+          barColor = 'var(--warning)';
+          strengthWord = 'Medium';
+          strengthText.className = 'strength-label strength-medium';
+        } else {
+          barColor = 'var(--success)';
+          strengthWord = 'Strong';
+          strengthText.className = 'strength-label strength-strong';
+        }
+
+        // Fill up colored chunks up to score
+        for(let i = 0; i < score; i++) {
+          if (chunks[i]) chunks[i].style.background = barColor;
+        }
+      } else {
+        strengthText.className = 'strength-label strength-weak';
+      }
+
+      strengthText.innerText = strengthWord;
+      
+      // Entire password is valid only if score is 5 (meets all criteria)
+      passwordIsValid = score === 5;
+      
+      // Toggle submit button state
+      submitBtn.disabled = !passwordIsValid;
+    });
+
+    // 4. Dynamic DOM Manipulation - Registering and Listing Users
+    const spaForm = document.getElementById('spaForm');
+    const userTableBody = document.getElementById('userTableBody');
+    const toast = document.getElementById('toast');
+
+    function showToast(msg) {
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    spaForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('fullname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const strength = strengthText.innerText;
+
+      if (!name || !email || !passwordIsValid) return;
+
+      const newUser = {
+        id: Date.now(),
+        name,
+        email,
+        strength
+      };
+
+      users.push(newUser);
+      renderUsers();
+      
+      // Reset form
+      spaForm.reset();
+      passwordInput.dispatchEvent(new Event('input')); // trigger reset of strength indicator
+      
+      showToast('Profile created successfully! Redirecting...');
+      
+      setTimeout(() => {
+        location.hash = '#users'; // Route to Users view
+      }, 500);
+    });
+
+    function renderUsers() {
+      // Clear current rows
+      userTableBody.innerHTML = '';
+
+      if (users.length === 0) {
+        userTableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No profiles listed.</td></tr>`;
+        return;
+      }
+
+      users.forEach(user => {
+        const tr = document.createElement('tr');
+        
+        tr.innerHTML = `
+          <td style="font-weight: 500;">\${escapeHtml(user.name)}</td>
+          <td>\${escapeHtml(user.email)}</td>
+          <td>
+            <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 9999px; font-weight: 600; background: \${getStrengthBg(user.strength)}; color: \${getStrengthColor(user.strength)}">
+              \${user.strength}
+            </span>
+          </td>
+          <td>
+            <div class="table-actions">
+              <button class="btn-action edit" onclick="editUser(\${user.id})">Edit</button>
+              <button class="btn-action delete" onclick="deleteUser(\${user.id})">Delete</button>
+            </div>
+          </td>
+        `;
+        
+        userTableBody.appendChild(tr);
+      });
+    }
+
+    function getStrengthBg(strength) {
+      if (strength === 'Strong') return 'rgba(16, 185, 129, 0.15)';
+      if (strength === 'Medium') return 'rgba(245, 158, 11, 0.15)';
+      return 'rgba(239, 68, 68, 0.15)';
+    }
+
+    function getStrengthColor(strength) {
+      if (strength === 'Strong') return 'var(--success)';
+      if (strength === 'Medium') return 'var(--warning)';
+      return 'var(--danger)';
+    }
+
+    function deleteUser(id) {
+      const idx = users.findIndex(u => u.id === id);
+      if (idx !== -1) {
+        const name = users[idx].name;
+        users.splice(idx, 1);
+        renderUsers();
+        showToast('Deleted user: ' + name);
+      }
+    }
+
+    function editUser(id) {
+      const user = users.find(u => u.id === id);
+      if (user) {
+        const newName = prompt('Update Name for ' + user.email + ':', user.name);
+        if (newName && newName.trim()) {
+          user.name = newName.trim();
+          renderUsers();
+          showToast('Updated details for ' + user.email);
+        }
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

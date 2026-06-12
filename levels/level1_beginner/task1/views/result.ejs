@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cognifyz - Submission Successful (Task 1)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #064e3b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 2.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .success-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .data-table {
+      width: 100%;
+      margin-bottom: 2rem;
+      border-collapse: collapse;
+    }
+
+    .data-row {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .data-label {
+      padding: 1rem 0;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      width: 35%;
+    }
+
+    .data-value {
+      padding: 1rem 0;
+      font-size: 0.95rem;
+      color: white;
+    }
+
+    .feedback-box {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+      margin-top: 0.5rem;
+      word-break: break-word;
+    }
+
+    .btn-back {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      padding: 0.875rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="success-badge">
+        <span>✓</span> Data Rendered Successfully
+      </div>
+      
+      <h1>Submission Received!</h1>
+      <p class="subtitle">EJS server-side template generated successfully.</p>
+
+      <table class="data-table">
+        <tr class="data-row">
+          <td class="data-label">Full Name</td>
+          <td class="data-value"><%= name %></td>
+        </tr>
+        <tr class="data-row">
+          <td class="data-label">Email</td>
+          <td class="data-value"><%= email %></td>
+        </tr>
+        <tr class="data-row">
+          <td class="data-label">Professional Role</td>
+          <td class="data-value"><%= role %></td>
+        </tr>
+        <tr class="data-row">
+          <td class="data-label">Feedback</td>
+          <td class="data-value">
+            <div class="feedback-box"><%= feedback %></div>
+          </td>
+        </tr>
+      </table>
+
+      <a href="/" class="btn-back">← Go Back to Form</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cognifyz Showcase - Responsive Design (Task 3)</title>
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-grad: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      --dark-bg: #0b0f19;
+      --card-bg: rgba(22, 28, 45, 0.7);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --font-title: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: #f8fafc;
+      font-family: var(--font-body);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .navbar-brand {
+      font-family: var(--font-title);
+      font-weight: 700;
+    }
+
+    /* Custom Transitions and Hover Animations */
+    .interactive-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .interactive-card:hover {
+      transform: translateY(-8px);
+      border-color: #a855f7;
+      box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.3);
+    }
+
+    /* Glowing gradient overlay animation on card hover */
+    .interactive-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(45deg, transparent, rgba(168, 85, 247, 0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .interactive-card:hover::before {
+      transform: translateX(100%);
+    }
+
+    /* Keyframe Animations */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+    }
+
+    .floating-element {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .glow-btn {
+      background: var(--primary-grad);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+      animation: pulse-glow 2s infinite;
+    }
+
+    .glow-btn:hover {
+      transform: scale(1.03);
+      color: white;
+      opacity: 0.95;
+    }
+
+    /* Navigation styling override */
+    .navbar {
+      background: rgba(11, 15, 25, 0.8) !important;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-link {
+      color: #cbd5e1 !important;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #a855f7 !important;
+    }
+
+    /* Hero section */
+    .hero-section {
+      padding: 100px 0 80px 0;
+      position: relative;
+    }
+
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      top: 20%; right: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      line-height: 1.15;
+      background: linear-gradient(to right, #ffffff, #c084fc);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Feature Icon circles */
+    .feature-icon-wrapper {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 0.75rem;
+      background: rgba(99, 102, 241, 0.1);
+      color: #818cf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <span style="background: var(--primary-grad); width: 24px; height: 24px; border-radius: 4px; display: inline-block;"></span>
+        COGNIFYZ TECH
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto gap-2">
+          <li class="nav-item"><a class="nav-link" href="#hero">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#stats">Metrics</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero-section">
+    <div class="container">
+      <div class="row align-items-center min-vh-75 gy-5">
+        <div class="col-lg-6">
+          <span class="badge bg-indigo text-light border border-secondary mb-3 py-2 px-3 rounded-pill text-uppercase tracking-wider" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2) !important;">Responsive Interface Design</span>
+          <h1 class="hero-title mb-4">Aesthetics Meet Scalability</h1>
+          <p class="lead text-secondary mb-4" style="font-size: 1.1rem; line-height: 1.6;">
+            A fully responsive layout engineered using Bootstrap grid structures, utilizing modern keyframe animations, sleek glassmorphism panels, and optimized font rendering.
+          </p>
+          <div class="d-flex gap-3 flex-wrap">
+            <a href="#features" class="btn glow-btn btn-lg">Explore Features</a>
+            <a href="#contact" class="btn btn-outline-secondary btn-lg rounded-pill" style="color: white; border-color: var(--border-color);">Get In Touch</a>
+          </div>
+        </div>
+        <div class="col-lg-6 text-center">
+          <div class="floating-element d-inline-block">
+            <div style="background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2)); border: 1px solid var(--border-color); padding: 2.5rem; border-radius: 2rem; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+              <h3 style="color: #c084fc;">Interactive Panel</h3>
+              <p class="text-secondary small">Resize the viewport to see fluid transitions</p>
+              <div class="d-flex flex-column gap-3 mt-4 text-start">
+                <div class="d-flex align-items-center gap-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 0.75rem;">
+                  <span class="fs-4">📱</span>
+                  <div>
+                    <h6 class="mb-0">Mobile Friendly</h6>
+                    <small class="text-muted">Flexbox & Grid alignment</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 0.75rem;">
+                  <span class="fs-4">🖥️</span>
+                  <div>
+                    <h6 class="mb-0">Desktop Viewport</h6>
+                    <small class="text-muted">Multi-column grid spaces</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-5" style="border-top: 1px solid var(--border-color);">
+    <div class="container py-5">
+      <div class="text-center mb-5">
+        <h2 class="fs-1">Advanced CSS Capabilities</h2>
+        <p class="text-secondary col-md-6 mx-auto">Leveraging modern layout models and transitioning styles to provide a highly interactive dashboard experience.</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-md-4">
+          <div class="interactive-card p-4 h-100">
+            <div class="feature-icon-wrapper">🚀</div>
+            <h4>Transitions</h4>
+            <p class="text-secondary small">Subtle micro-interactions on elements when hovering or performing active operations.</p>
+          </div>
+        </div>
+        <!-- Feature 2 -->
+        <div class="col-md-4">
+          <div class="interactive-card p-4 h-100">
+            <div class="feature-icon-wrapper">🎭</div>
+            <h4>Keyframes</h4>
+            <p class="text-secondary small">Custom looping animations to guide the user's attention to critical components.</p>
+          </div>
+        </div>
+        <!-- Feature 3 -->
+        <div class="col-md-4">
+          <div class="interactive-card p-4 h-100">
+            <div class="feature-icon-wrapper">📐</div>
+            <h4>Fluid Grid</h4>
+            <p class="text-secondary small">Adaptive breakpoints rendering perfect layouts on phones, tablets, and wide monitors.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics / Stats Section -->
+  <section id="stats" class="py-5" style="background: rgba(22, 28, 45, 0.3); border-top: 1px solid var(--border-color);">
+    <div class="container py-5">
+      <div class="row g-4 text-center">
+        <div class="col-sm-6 col-md-3">
+          <h2 class="display-4 font-weight-bold" style="color: #6366f1;">100%</h2>
+          <p class="text-secondary uppercase small">Responsive</p>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <h2 class="display-4 font-weight-bold" style="color: #a855f7;">60 FPS</h2>
+          <p class="text-secondary uppercase small">GPU Animations</p>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <h2 class="display-4 font-weight-bold" style="color: #ec4899;">0px</h2>
+          <p class="text-secondary uppercase small">Scroll Leakage</p>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <h2 class="display-4 font-weight-bold" style="color: #10b981;">A+</h2>
+          <p class="text-secondary uppercase small">Aesthetic Rating</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-5" style="border-top: 1px solid var(--border-color);">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="interactive-card p-5">
+            <h2 class="text-center mb-4">Register Interest</h2>
+            <form>
+              <div class="mb-3">
+                <label class="form-label text-secondary">Name</label>
+                <input type="text" class="form-control bg-dark text-white border-secondary" placeholder="John Doe">
+              </div>
+              <div class="mb-3">
+                <label class="form-label text-secondary">Email</label>
+                <input type="email" class="form-control bg-dark text-white border-secondary" placeholder="john@example.com">
+              </div>
+              <button type="submit" class="btn btn-primary w-100 mt-3" style="background: var(--primary-grad); border: none; font-weight: 600; padding: 0.65rem;">Submit Response</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-secondary" style="border-top: 1px solid var(--border-color); font-size: 0.85rem;">
+    <div class="container">
+      © 2026 Cognifyz Technologies. All academic rights reserved.
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
