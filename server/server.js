@@ -8,11 +8,11 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import taskRoutes from './routes/tasks.js';
 
-// Load environment variables
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load environment variables
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 // Initialize express app
 const app = express();
