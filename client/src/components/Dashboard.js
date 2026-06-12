@@ -70,11 +70,7 @@ const Dashboard = () => {
 
   // Sync stats when tasks state updates
   useEffect(() => {
-    if (tasks.length > 0) {
-      fetchStats();
-    } else {
-      setStats({ total: 0, completed: 0, inProgress: 0, todo: 0, highPriority: 0 });
-    }
+    fetchStats();
   }, [tasks, fetchStats]);
 
   const handleFilterChange = (e) => {
@@ -151,6 +147,7 @@ const Dashboard = () => {
         await createTask(taskData);
       }
       setIsModalOpen(false);
+      getTasks(filters);
       fetchStats();
     } catch (err) {
       setFormError(err.response?.data?.message || 'Something went wrong');
@@ -161,6 +158,7 @@ const Dashboard = () => {
     const newStatus = task.status === 'completed' ? 'todo' : 'completed';
     try {
       await updateTask(task._id, { status: newStatus });
+      getTasks(filters);
       fetchStats();
     } catch (err) {
       console.error('Failed to toggle status', err);
@@ -171,6 +169,7 @@ const Dashboard = () => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       try {
         await deleteTask(taskId);
+        getTasks(filters);
         fetchStats();
       } catch (err) {
         console.error('Failed to delete task', err);
