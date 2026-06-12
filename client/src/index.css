@@ -335,28 +335,34 @@ textarea {
 
 .loader {
   width: 40px;
-  height: 60px;
-  position: relative;
+  aspect-ratio: 1;
+  --c: linear-gradient(var(--primary) 0 0);
+  --r1: radial-gradient(farthest-side at bottom,var(--primary) 93%,#0000);
+  --r2: radial-gradient(farthest-side at top   ,var(--primary) 93%,#0000);
+  background: 
+    var(--c) ,var(--r1),var(--r2),
+    var(--c) ,var(--r1),var(--r2),
+    var(--c) ,var(--r1),var(--r2);
+  background-repeat: no-repeat;
+  animation: l2 1s infinite alternate;
 }
-.loader::before,
-.loader::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--primary);
-  clip-path: polygon(0 0,100% 0, 100% 67%,50% 67%,50% 34%,0 34%);
-  animation: sp7 2s infinite;
-}
-.loader::after {
-  --s:-1,-1;
-}
-@keyframes sp7 {
-    0%,
-    10%  {transform:scale(var(--s,1)) translate(0,0)        rotate(0deg)}
-    33%  {transform:scale(var(--s,1)) translate(0,-20px)    rotate(0deg)}
-    66%  {transform:scale(var(--s,1)) translate(10px,-20px) rotate(-90deg)}
-    90%,
-    100% {transform:scale(var(--s,1)) translate(10px,-10px) rotate(-90deg)}
+@keyframes l2 {
+  0%,25% {
+    background-size: 8px 0,8px 4px,8px 4px,8px 0,8px 4px,8px 4px,8px 0,8px 4px,8px 4px;
+    background-position: 0 50%,0 calc(50% - 2px),0 calc(50% + 2px),50% 50%,50% calc(50% - 2px),50% calc(50% + 2px),100% 50%,100% calc(50% - 2px),100% calc(50% + 2px);
+ }
+ 50% {
+    background-size: 8px 100%,8px 4px,8px 4px,8px 0,8px 4px,8px 4px,8px 0,8px 4px,8px 4px;
+    background-position: 0 50%,0 calc(0% - 2px),0 calc(100% + 2px),50% 50%,50% calc(50% - 2px),50% calc(50% + 2px),100% 50%,100% calc(50% - 2px),100% calc(50% + 2px);
+ }
+ 75% {
+    background-size: 8px 100%,8px 4px,8px 4px,8px 100%,8px 4px,8px 4px,8px 0,8px 4px,8px 4px;
+    background-position: 0 50%,0 calc(0% - 2px),0 calc(100% + 2px),50% 50%,50% calc(0% - 2px),50% calc(100% + 2px),100% 50%,100% calc(50% - 2px),100% calc(50% + 2px);
+ }
+ 95%,100% {
+    background-size: 8px 100%,8px 4px, 8px 4px,8px 100%,8px 4px,8px 4px,8px 100%,8px 4px,8px 4px;
+    background-position: 0 50%,0 calc(0% - 2px),0 calc(100% + 2px),50% 50%,50% calc(0% - 2px),50% calc(100% + 2px),100% 50%,100% calc(0% - 2px),100% calc(100% + 2px);
+ }
 }
 
 .badge {
